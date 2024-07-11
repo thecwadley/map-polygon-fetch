@@ -5,6 +5,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import json
 import matplotlib.pyplot as plt
+# import copy
 
 coordinates_complex=[[-92.67135532191914,37.685714457810896],[-92.65835579781118,37.67589605069125],[-92.64917989981242,37.683392595609675],[-92.65050640456855,37.68554125776477],[-92.65804359477826,37.685652539534445],[-92.65826219481298,37.68672683962893],[-92.6547667125931,37.68665321166851],[-92.65490713233096,37.69007348793363],[-92.65557782174392,37.69293895512361],[-92.65897970096512,37.695841102943604],[-92.66447289550727,37.69243280231237],[-92.66829600346317,37.69213580433914],[-92.6681555837253,37.68876415238195],[-92.67088675829456,37.68661558359242]]
 coordinates_simple=[[-92.66580862851671,37.68859125435237],[-92.66421590806539,37.688533866930456],[-92.66417738023868,37.68557914389185],[-92.66569728083961,37.685656967277154]]
@@ -17,7 +18,27 @@ def get_cycles(coordinates):
     polygon = Polygon(coordinates)
     G = ox.graph_from_polygon(polygon, network_type="all_public")
     undi_G = nx.Graph(G)
-    cycles = nx.cycle_basis(undi_G)
+    cycles_generator = nx.chordless_cycles(undi_G)
+    # cycles = nx.cycle_basis(undi_G)
+    # letter_cycles = copy.deepcopy(cycles)
+    cycles = []
+    for cycle in cycles_generator:
+        cycles.append(cycle)
+
+    # key = dict()
+    # values = dict()
+    # letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    # current_letter = 0
+    # for shape_index in range(len(cycles)):
+    #     for point_index in range(len(cycles[shape_index])):
+    #         if not cycles[shape_index][point_index] in key.keys():
+    #             key[cycles[shape_index][point_index]] = letters[current_letter]
+    #             values[letters[current_letter]] = cycles[shape_index][point_index]
+    #             current_letter += 1
+    #         letter_cycles[shape_index][point_index] = key[cycles[shape_index][point_index]]
+
+    # print(letter_cycles)
+            
 
     shapes_coordinates = []
 
@@ -57,5 +78,5 @@ def main(string_coordinates):
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
-# coordinates_broke = [[37.68837090098686,-92.66874914438237],[37.686024024297225,-92.67177656588937],[37.68278847932924,-92.66737583812692],[37.685184822108695,-92.6647074211527]]
-# get_cycles(coordinates_broke)
+# coordinates_broke = [[-92.66319338565718,37.693064308591204],[-92.66141439528823,37.69114112804267],[-92.65733757855429,37.69388564650602],[-92.65908531966421,37.695617388673746]]
+# print(get_cycles(coordinates_broke))
